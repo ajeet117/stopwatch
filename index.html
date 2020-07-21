@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>StopWatch</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content='width=device-width,inital-scale=1.0'>
+	<style type="text/css">
+		*
+		{
+			margin:0px;
+			padding:0px;
+			box-sizing:border-box;
+		}
+		body
+		{
+			background-color: whitesmoke;
+		}
+		#stop-watch
+		{
+			display: grid;
+			grid-template-columns: auto;
+			justify-content: center;
+			margin: auto;
+			margin-top: 50px;
+			border: 1px solid #efefef;
+			background-color: white;
+			width: 25%;
+			box-shadow:  0 1px 1px rgba(0,0,0,0.15),
+						 0 10px 0 -5px #eee,
+						 0 10px 1px -4px rgba(0,0,0,0.15),
+						 0 20px 0 -10px #eee,
+						 0 20px 1px -9px rgba(0,0,0,0.15);
+
+		}
+		#stop-watch .display
+		{
+			display: flex;
+			flex-direction: row;
+			align-content: center;
+			justify-content: center;
+			margin-top: 10px;
+
+		}
+		#button
+		{
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			align-content: center;
+		}
+		#stop-watch .display p
+		{
+			font-size: 2rem;
+		}
+		#stop-watch #button
+		{
+			margin-top: 10px;
+			margin-bottom:10px;
+		}
+		#stop-watch #button button 
+		{
+			outline: none;
+			font-size: 1.2rem;
+			padding: 15px;
+			border-radius: 50%;
+			border:none;
+			margin-right: 5px;
+
+		}
+		#lapseDisplay p
+		{
+			font-size: 1.5rem;
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body>
+<div id="stop-watch">
+	<div class="display">
+	<p id="hour">00</p>
+	<p> : </p>
+	<p id="min">00</p>
+	<p>	: </p>
+	<p id="sec">00</p>
+</div>
+<div id="button">
+	<button id="start">Start</button>
+</div>
+<div id='lapseDisplay'></div>
+</div>
+
+<script type="text/javascript">
+	let myTime;
+	let count=0;
+	let sec=document.getElementById('sec').innerText;
+	let min=document.getElementById('min').innerText;
+	let hour=document.getElementById('hour').innerText;
+	let lapseDisplay=document.getElementById('lapseDisplay');
+	let start=document.getElementById('start');
+	let button=document.getElementById('button');
+	start.addEventListener('click', getStart);
+	function getStart()
+	{
+		start.style.display="none";
+		 myTime=setInterval(increaseSec,1000);
+		 if(!document.getElementById('stop')){
+		let stopButton=document.createElement('button');
+		stopButton.innerText="Stop";
+		stopButton.id='stop';
+		button.appendChild(stopButton);
+		stopButton.addEventListener('click',stop);
+		let lapseButton=document.createElement('button');
+		lapseButton.innerText='Lapse';
+		lapseButton.id='lapse'
+		button.appendChild(lapseButton);
+		lapseButton.addEventListener('click',lapse);
+		}
+		else
+		{
+			document.getElementById('stop').style.display='block';
+			document.getElementById('lapse').style.display='block';
+		}
+	}
+	function stop()
+	{
+
+		document.getElementById('stop').style.display='none';
+		document.getElementById('lapse').style.display='none';
+		clearInterval(myTime);
+		if(!document.getElementById('resume'))
+		{
+		let resumeButton=document.createElement('button');
+		resumeButton.innerText='Resume';
+		resumeButton.id='resume';
+		button.appendChild(resumeButton);
+		let resetButton=document.createElement('button');
+		resetButton.innerText='Reset';
+		resetButton.id='reset';
+		button.appendChild(resetButton);
+		resumeButton.addEventListener('click',resume);
+		resetButton.addEventListener('click',reset);
+		}
+		else
+		{
+			document.getElementById('resume').style.display='block';
+			document.getElementById('reset').style.display='block';
+		}
+}
+	function resume()
+	{
+		getStart();
+		document.getElementById('resume').style.display='none';
+		document.getElementById('reset').style.display='none';
+	}
+	function reset()
+	{
+		sec='00';
+		min='00';
+		hour='00';
+		document.getElementById('sec').innerText=sec;
+		document.getElementById('min').innerText=min;
+		document.getElementById('hour').innerText=hour;
+		document.getElementById('resume').style.display='none';
+		document.getElementById('reset').style.display='none';
+		document.getElementById('lapseDisplay').innerHTML="";
+		start.style.display="block";
+		count=0;
+	}
+	function lapse()
+	{
+		count=count + 1;
+		let p=document.createElement('p');
+		p.innerText= count +'.' + hour +':' + min + ':' + sec
+		lapseDisplay.appendChild(p); 
+	}
+	function increaseSec()
+	{ 
+
+		sec=parseInt(sec)+ 1;
+		if(sec == 60 )
+		{
+			increaseMin();
+			sec="0";
+		}
+		if(sec < 10 )
+        {
+        	sec="0" + sec.toString();
+        }
+		document.getElementById('sec').innerText=sec;
+	}
+	function increaseMin()
+	{
+		min=parseInt(min) + 1;
+		if(min == 60 )
+		{
+			increaseHour();
+			min="0";
+		}
+		if(min < 10 )
+        {
+        	min="0" + min.toString();
+        }
+		document.getElementById('min').innerText=min;
+	}
+	function increaseHour()
+	{
+		hour=parseInt(hour) + 1;
+		if(hour < 10 )
+        {
+        	hour="0" + hour.toString();
+        }
+		document.getElementById('hour').innerText=hour;
+	}
+
+</script>
+</body>
+</html>
